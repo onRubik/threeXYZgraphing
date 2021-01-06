@@ -1,91 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>three.js webgl - loaders - XYZ</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	</head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scratch</title>
+</head>
+<body>
+    <script type="module">
+        
+        import * as THREE from '../node_modules/three/build/three.module.js';
+        import { GridHelper } from '../node_modules/three/src/helpers/GridHelper.js';
+        import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+		import { XYZLoader } from '../node_modules/three/examples/jsm/loaders/XYZLoader.js';
+        
+        var camera, controls, scene, renderer;
+      
+        let points;
+        
+        init();
+        animate();
 
-	<body>
-		<script type="module">
+        function init(){
+            
+            scene = new THREE.Scene();
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+            
+            camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+            camera.position.set( 0, 20, 100 );
+            
+            controls = new OrbitControls( camera, renderer.domElement );
+            
+            window.addEventListener( 'resize', onWindowResize, false );
 
-			import * as THREE from '../node_modules/three/build/three.module.js';
+            function onWindowResize(){
 
-			import { XYZLoader } from '../node_modules/three/examples/jsm/loaders/XYZLoader.js';
-            //node_modules/three/examples/jsm/loaders/XYZLoader.js
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
 
-			let camera, scene, renderer, clock;
+                renderer.setSize( window.innerWidth, window.innerHeight );
 
-			let points;
+            }
 
-			init();
-			animate();
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
 
-			function init() {
+            controls.screenSpacePanning = false;
 
-				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 100 );
-				camera.position.set( 10, 7, 10 );
+            controls.minDistance = 10;
+            controls.maxDistance = 500;
 
-				scene = new THREE.Scene();
-				scene.add( camera );
-				camera.lookAt( scene.position );
+            //grid
+            var size = 100;
+            var divisions = 20;
+            var colorCenterLine = 0x333333;
+            var colorGrid = 0x222222;
+            var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid );
+            scene.add( gridHelper );
 
-				clock = new THREE.Clock();
+            //several points
+            var dotGeometry2 = new THREE.Geometry();
+            dotGeometry2.vertices.push(
+                
+            
+                // new THREE.Vector3(10,10,10),
+                // new THREE.Vector3(20,10,20),
+                // new THREE.Vector3(10,10,30),
+                // new THREE.Vector3(20,10,40)
+                );
+            var dotMaterial = new THREE.PointsMaterial({color: 0x666666,size: 2, sizeAttenuation: false});
+            var dot2 = new THREE.Points(dotGeometry2, dotMaterial);
+            scene.add( dot2 );
 
-				const loader = new XYZLoader();
-				loader.load( 'models/xyz/helix_201.xyz', function ( geometry ) {
+            //conecting the points
+            var lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+            var line = new THREE.LineLoop( dotGeometry2, lineMaterial );
+            scene.add( line );
+        }
 
-					geometry.center();
+        //loader test
+        const loader = new XYZLoader();
+        loader.load( 'models/xyz/helix_201.xyz', function ( geometry ) {
 
-					const vertexColors = ( geometry.hasAttribute( 'color' ) === true );
+            geometry.center();
 
-					const material = new THREE.PointsMaterial( { size: 0.1, vertexColors: vertexColors } );
+            const vertexColors = ( geometry.hasAttribute( 'color' ) === true );
 
-					points = new THREE.Points( geometry, material );
-					scene.add( points );
+            const material = new THREE.PointsMaterial( { size: 0.1, vertexColors: vertexColors } );
 
-				} );
+            points = new THREE.Points( geometry, material );
+            scene.add( points );
 
-				//
+        } );
 
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
+        function animate() {
+            
+            requestAnimationFrame( animate );
 
-				//
+            // required if controls.enableDamping or controls.autoRotate are set to true
+            controls.update();
 
-				window.addEventListener( 'resize', onWindowResize, false );
+            render();
 
-			}
+        }
+        function render() {
 
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-
-				const delta = clock.getDelta();
-
-				if ( points ) {
-
-					points.rotation.x += delta * 0.2;
-					points.rotation.y += delta * 0.5;
-
-				}
-
-				renderer.render( scene, camera );
-
-			}
-
-		</script>
-
-	</body>
+            renderer.render( scene, camera );
+        }
+    </script>
+</body>
 </html>
