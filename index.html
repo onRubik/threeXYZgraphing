@@ -65,6 +65,8 @@
             var geometry = new THREE.Geometry();
             const loader = new XYZLoader();
             loader.load( 'models/xyz/helix_201.xyz', function ( geometry ) {
+            // loader.load( 'models/xyz/randomPoints.xyz', function ( geometry ) {
+            // loader.load( 'models/xyz/randomPoints2.xyz', function ( geometry ) {
                 
                 geometry.center();
                 
@@ -100,6 +102,12 @@
 
             renderer.render( scene, camera );
         }
+    </script>
+    <button type="button" onClick="reloadThePage()">Refresh</button>
+    <script>
+        function reloadThePage(){
+            window.location.reload(true);
+        } 
     </script>
 </body>
 </html>
