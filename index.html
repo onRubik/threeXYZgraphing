@@ -62,37 +62,41 @@
             //several points
             var dotGeometry2 = new THREE.Geometry();
             dotGeometry2.vertices.push(
-                
-            
-                // new THREE.Vector3(10,10,10),
-                // new THREE.Vector3(20,10,20),
-                // new THREE.Vector3(10,10,30),
-                // new THREE.Vector3(20,10,40)
+                new THREE.Vector3(20,0,10),
+                new THREE.Vector3(30,10,20),
+                new THREE.Vector3(-30,5,30),
+                new THREE.Vector3(-40,30,40)
                 );
             var dotMaterial = new THREE.PointsMaterial({color: 0x666666,size: 2, sizeAttenuation: false});
             var dot2 = new THREE.Points(dotGeometry2, dotMaterial);
             scene.add( dot2 );
 
-            //conecting the points
+            //conecting the points from vertices
             var lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
             var line = new THREE.LineLoop( dotGeometry2, lineMaterial );
             scene.add( line );
+
+            //loader test
+            var geometry = new THREE.Geometry();
+            const loader = new XYZLoader();
+            loader.load( 'models/xyz/helix_201.xyz', function ( geometry ) {
+                
+                geometry.center();
+                
+                const vertexColors = ( geometry.hasAttribute( 'color' ) === true );
+                
+                const material = new THREE.PointsMaterial( { size: 0.1, vertexColors: vertexColors } );
+                
+                points = new THREE.Points( geometry, material );
+                scene.add( points );    
+                
+                //conecting the points
+                var line2 = new THREE.LineLoop( geometry, lineMaterial );
+                scene.add( line2 );
+            });
+            
         }
 
-        //loader test
-        const loader = new XYZLoader();
-        loader.load( 'models/xyz/helix_201.xyz', function ( geometry ) {
-
-            geometry.center();
-
-            const vertexColors = ( geometry.hasAttribute( 'color' ) === true );
-
-            const material = new THREE.PointsMaterial( { size: 0.1, vertexColors: vertexColors } );
-
-            points = new THREE.Points( geometry, material );
-            scene.add( points );
-
-        } );
 
         function animate() {
             
