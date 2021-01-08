@@ -75,10 +75,15 @@
                 points = new THREE.Points( geometry, material );
                 scene.add( points );    
                 
+                //connectiong points
                 const line = new THREE.Line(geometry, lineMaterial);
                 scene.add(line);
+                
+                //total sum distances of line
+                line.computeLineDistances();
+                let lineSum = line.geometry.getAttribute("lineDistance");
+                console.log("line sum: " + lineSum.getX(lineSum.count - 1));
             });
-            
         }
 
         function animate() {
