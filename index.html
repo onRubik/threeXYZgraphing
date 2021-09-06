@@ -64,10 +64,7 @@
             //loader test
             var geometry = new THREE.Geometry();
             const loader = new XYZLoader();
-            // loader.load( 'models/xyz/helix_201.xyz', function ( geometry ) {
-            // loader.load( 'models/xyz/randomPoints.xyz', function ( geometry ) {
-            // loader.load( 'models/xyz/randomPoints2.xyz', function ( geometry ) {
-            loader.load( 'models/xyz/shortPoints.xyz', function ( geometry ) {
+            loader.load( 'xyz_output/xyz1.txt', function ( geometry ) {
                 
                 geometry.center();
                 
