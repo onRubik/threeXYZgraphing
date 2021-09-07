@@ -5,7 +5,7 @@
   "main": "readFile.js",
   "dependencies": {
     "save": "^2.4.0",
-    "three": "^0.124.0"
+    "three": "^0.132.2"
   },
   "devDependencies": {},
   "scripts": {
