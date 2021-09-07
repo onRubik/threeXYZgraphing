@@ -11,7 +11,7 @@ def write_permutation():
     try:
         list_xyz = read_points()
         script_dir = os.path.dirname(__file__)
-        out_csv_path = os.path.join(script_dir, '../perm_output/perm3.csv')
+        out_csv_path = os.path.join(script_dir, '../perm_output/perm_helix_202.csv')
 
         f = open(out_csv_path, 'w', newline='')
         writer = csv.writer(f)
