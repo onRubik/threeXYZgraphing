@@ -62,7 +62,7 @@
             var lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
             
             //loader test
-            var geometry = new THREE.Geometry();
+            var geometry = new THREE.BufferGeometry();
             const loader = new XYZLoader();
             loader.load( 'xyz_output/xyz_helix_202.txt', function ( geometry ) {
                 
@@ -74,6 +74,11 @@
                 
                 points = new THREE.Points( geometry, material );
                 scene.add( points );    
+                
+                // draw range
+                console.log("geometry count: " + geometry.attributes.position.count)
+                var drawCount = 2; // draw the first 2 points only
+                geometry.setDrawRange( 0, drawCount )
                 
                 //connecting points
                 const line = new THREE.Line(geometry, lineMaterial);
