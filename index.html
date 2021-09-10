@@ -16,6 +16,9 @@
         var camera, controls, scene, renderer;
       
         let points;
+        let line;
+        let drawCount;
+        let MAX_POINTS;
         
         init();
         animate();
@@ -63,8 +66,10 @@
             
             //loader test
             var geometry = new THREE.BufferGeometry();
-            const loader = new XYZLoader();
-            loader.load( 'xyz_output/xyz_helix_202.txt', function ( geometry ) {
+            const loaderPoints = new XYZLoader();
+            const loaderLine = new XYZLoader();
+
+            loaderPoints.load( 'xyz_output/xyz_helix_202.txt', function ( geometry ) {
                 
                 geometry.center();
                 
@@ -73,15 +78,21 @@
                 const material = new THREE.PointsMaterial( { size: 0.1, vertexColors: vertexColors } );
                 
                 points = new THREE.Points( geometry, material );
-                scene.add( points );    
+                scene.add( points );                    
+            });
+
+            loaderLine.load( 'xyz_output/xyz_helix_202.txt', function ( geometry ) {
                 
+                geometry.center();
+                                
                 // draw range
                 console.log("geometry count: " + geometry.attributes.position.count)
-                var drawCount = 2; // draw the first 2 points only
+                MAX_POINTS = geometry.attributes.position.count + 1;
+                drawCount = 2; // draw the first 2 points only
                 geometry.setDrawRange( 0, drawCount )
                 
                 //connecting points
-                const line = new THREE.Line(geometry, lineMaterial);
+                line = new THREE.Line(geometry, lineMaterial);
                 scene.add(line);
                 
                 //total sum distances of line
@@ -91,9 +102,15 @@
             });
         }
 
+// for further reference on how to animate the line draw visit: https://jsfiddle.net/xvnctbL0/2/
+
         function animate() {
             
             requestAnimationFrame( animate );
+
+            drawCount = ( drawCount + 1 ) % MAX_POINTS;
+
+	        line.geometry.setDrawRange( 0, drawCount );
 
             // required if controls.enableDamping or controls.autoRotate are set to true
             controls.update();
