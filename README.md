@@ -4,6 +4,11 @@
 # Graphing usage
 The main .html file needs an http server to load. For further reference visit https://threejs.org (search for 'How-to-run-things-locally')
 
+## View an example
+To view "nearest node helix 202" visit:
+https://youtu.be/6B0NAUKHD7k
+
+
 # Python
 Python version in use = 3.9.0
 
