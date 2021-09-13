@@ -6,13 +6,13 @@ import os
 def write_xyz():
     try:
         origin = 1
-        file_name = 'perm_helix_202.csv'
-        xyz_file_name = 'xyz_helix_202.txt'
+        file_name = 'perm_randomPoints.csv'
+        xyz_file_name = 'xyz_randomPoints.txt'
         node_history = []
         node_history.append(origin)
 
         script_dir = os.path.dirname(__file__)
-        full_path = os.path.join(script_dir, '../input/helix_202.csv')
+        full_path = os.path.join(script_dir, '../input/randomPoints.csv')
         perm_path = os.path.join(script_dir, '../perm_output/' + file_name)
         xyz_path = os.path.join(script_dir, '../xyz_output/' + xyz_file_name)
         out_pd_read = pd.read_csv(perm_path)

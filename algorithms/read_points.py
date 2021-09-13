@@ -5,7 +5,7 @@ import os
 def read_points():
     script_dir = os.path.dirname(__file__)
 
-    full_path = os.path.join(script_dir, '../input/helix_202.csv')
+    full_path = os.path.join(script_dir, '../input/randomPoints.csv')
 
     with open(os.path.join(full_path), mode = 'r')as file:
         
