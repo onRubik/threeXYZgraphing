@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>graph view</title>
 </head>
-<body>
+<body style="margin:0;">
     <script type="module">
         
         import * as THREE from '../node_modules/three/build/three.module.js';
@@ -14,16 +14,34 @@
 		import { XYZLoader } from '../node_modules/three/examples/jsm/loaders/XYZLoader.js';
         
         var camera, controls, scene, renderer;
-      
+        
         let points;
         let line;
         let drawCount;
         let MAX_POINTS;
         
+        let input = document.querySelectorAll("input"),
+            rValue = input[0].value,
+            gValue = input[1].value,
+            bValue = input[2].value;
+
+        input[0].addEventListener("input", function(){
+            rValue = this.value;
+        });
+
+        input[1].addEventListener("input", function(){
+            gValue = this.value;
+        });
+
+        input[2].addEventListener("input", function(){
+            bValue = this.value;
+        });
+        
         init();
         animate();
-
+        
         function init(){
+            
             
             scene = new THREE.Scene();
             renderer = new THREE.WebGLRenderer();
@@ -36,24 +54,24 @@
             controls = new OrbitControls( camera, renderer.domElement );
             
             window.addEventListener( 'resize', onWindowResize, false );
-
+            
             function onWindowResize(){
-
+                
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
-
+                
                 renderer.setSize( window.innerWidth, window.innerHeight );
-
+                
             }
-
+            
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
-
+            
             controls.screenSpacePanning = false;
-
+            
             controls.minDistance = 10;
             controls.maxDistance = 500;
-
+            
             //grid
             var size = 100;
             var divisions = 20;
@@ -62,13 +80,18 @@
             var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid );
             scene.add( gridHelper );
 
-            var lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+            let lineColor = new THREE.Color("rgb(" + rValue + "," + gValue + "," + bValue + ")");
+            lineColor.needsUpdate = true;
+            
+            var lineMaterial = new THREE.LineBasicMaterial( { color: lineColor } );
+            lineMaterial.needsUpdate = true;
             
             //loader test
             var geometry = new THREE.BufferGeometry();
             const loaderPoints = new XYZLoader();
             const loaderLine = new XYZLoader();
-
+            
             loaderPoints.load( 'xyz_output/xyz_randomPoints.txt', function ( geometry ) {
                 
                 geometry.center();
@@ -80,11 +103,11 @@
                 points = new THREE.Points( geometry, material );
                 scene.add( points );                    
             });
-
+            
             loaderLine.load( 'xyz_output/xyz_randomPoints.txt', function ( geometry ) {
                 
                 geometry.center();
-                                
+                
                 // draw range
                 console.log("geometry count: " + geometry.attributes.position.count)
                 MAX_POINTS = geometry.attributes.position.count + 1;
@@ -127,7 +150,15 @@
     <script>
         function reloadThePage(){
             window.location.reload(true);
-        } 
+        }
+        
+        document.body.style.overflow = 'hidden';
     </script>
+    <div class="picker">
+        Red <input type="range" min="0" max="255" step="1" id="red" value="64">
+        Green <input type="range" min="0" max="255" step="1" id="green" value="0">
+        Blue <input type="range" min="0" max="255" step="1" id="blue" value="255">
+        <div id="display"></div>
+    </div>
 </body>
 </html>
