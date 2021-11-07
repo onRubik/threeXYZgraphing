@@ -2,7 +2,19 @@
 3d xyz graphing using threejs
 
 # Graphing usage
-The main .html file needs an http server to load. For further reference visit https://threejs.org (search for 'How-to-run-things-locally')
+To fix issues when loading threejs modules directly from index.html [Rollup](https://www.npmjs.com/package/rollup) was used.
+
+After cloning the project open its folder with a terminal and install the npm dependencies:
+> npm install
+
+In the terminal run the npm rollup script to build the bundle:
+> npm run build
+
+To start the http server run the npm script (it will be available locally http://localhost:3000). To open the local URL preferably use Google Chrome:
+> npm start
+
+To change the source for the coordinates to load change the path contained in loaderPoints.load() and loaderLine.load() and choose another file contained in the xyz_ouput/ folder.
+
 
 ## View an example
 To view "nearest node helix 202" visit:
