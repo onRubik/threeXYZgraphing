@@ -54,7 +54,7 @@ class App {
         var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid );
         scene.add( gridHelper );
     
-        var lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+        var lineMaterial = new THREE.LineBasicMaterial( { color: 0xEFFF33 } );
         
         //loader test
         var geometry = new THREE.BufferGeometry();
