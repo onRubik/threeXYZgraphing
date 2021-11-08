@@ -61,7 +61,7 @@ class App {
         const loaderPoints = new XYZLoader();
         const loaderLine = new XYZLoader();
     
-        loaderPoints.load( 'xyz_output/xyz_randomPoints.txt', function ( geometry ) {
+        loaderPoints.load( 'xyz_output/xyz_polygons.txt', function ( geometry ) {
             
             geometry.center();
             
@@ -73,7 +73,7 @@ class App {
             scene.add( points );                    
         });
     
-        loaderLine.load( 'xyz_output/xyz_randomPoints.txt', function ( geometry ) {
+        loaderLine.load( 'xyz_output/xyz_polygons.txt', function ( geometry ) {
             
             geometry.center();
                             
