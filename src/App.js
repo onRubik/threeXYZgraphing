@@ -104,7 +104,13 @@ class App {
 
 function animate() {
     
-    requestAnimationFrame( animate );
+    setTimeout( function() {
+
+        requestAnimationFrame( animate );
+
+    }, 1000 / 30 );
+    
+    // requestAnimationFrame( animate );
 
     drawCount = ( drawCount + 1 ) % MAX_POINTS;
 
