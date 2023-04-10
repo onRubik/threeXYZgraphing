@@ -5,7 +5,8 @@ class mainModel:
     def runModel(self):
         chain_name = 'polygons'
         newController = controller(chain_name)
-        newController.getDistance()
+        # newController.getDistance()
+        newController.mst()
         pass
 
 

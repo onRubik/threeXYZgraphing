@@ -7,7 +7,10 @@ import csv
 from decimal import Decimal
 from numpy import array
 from itertools import combinations
+from itertools import permutations
 import networkx as nx
+import json
+from ast import literal_eval
 
 
 class controller:
@@ -139,43 +142,77 @@ class controller:
 
     
     def mst(self):
-        xyz_output, os_type = dataIntegrity.imgFolder(self)
-        xyz_output = Path(xyz_output)
-        xyz_output = xyz_output.parent
+        img_path, os_type = dataIntegrity.imgFolder(self)
+        img_path = Path(img_path)
+        img_path = img_path.parent
 
         if os_type == 'Windows':
-            xyz_output_fix = str(xyz_output) + '\\xyz_output\\' + self.chain_name
+            comb_input_fix = str(img_path) + '\\output\\' + 'comb_' + self.chain_name + '.json'
+            points_input_fix = str(img_path) + '\\output\\' + 'points_' + self.chain_name + '.json'
         if os_type == 'Linux':
-            xyz_output_fix = str(xyz_output) + '/xyz_output/' + self.chain_name
-        pass
+            comb_input_fix = str(img_path) + '/output/' + 'comb_' + self.chain_name + '.json'
+            points_input_fix = str(img_path) + '/output/' + 'points_' + self.chain_name + '.json'
+
+        with open(comb_input_fix) as f:
+            comb_input = json.load(f)
+        with open(points_input_fix) as f:
+            points_input = json.load(f)
+
+        tup_comb_input = {literal_eval(k): v for k, v in comb_input.items()}
+
+        n_points = len(tup_comb_input)
+        stack = []
+        history = []
+        takes = 0
+        while takes < n_points:
+            takes += 1
+            # print(comb_input[0])
+            chose = min(set(tup_comb_input)-set(history),key=tup_comb_input.get)
+            print('chose = ', chose)
+            print(type(chose))
+            review = stack.copy()
+            review.append(chose)
+            print('review = ' + str(review))
+            G = nx.DiGraph(review)
+            try:
+                nx.find_cycle(G, orientation='ignore')
+            except:
+                stack.append(chose)
+            history.append(chose)
+            print(stack)
 
 
     def getDistance(self):
-        xyz_input, os_type = dataIntegrity.imgFolder(self)
-        xyz_input = Path(xyz_input)
-        xyz_input = xyz_input.parent
+        img_path, os_type = dataIntegrity.imgFolder(self)
+        img_path = Path(img_path)
+        img_path = img_path.parent
 
         if os_type == 'Windows':
-            xyz_input_fix = str(xyz_input) + '\\input\\' + self.chain_name + '.csv'
+            xyz_input_fix = str(img_path) + '\\input\\' + self.chain_name + '.csv'
+            comb_output_fix = str(img_path) + '\\output\\' + 'comb_' + self.chain_name + '.json'
+            points_output_fix = str(img_path) + '\\output\\' + 'points_' + self.chain_name + '.json'
         if os_type == 'Linux':
-            xyz_input_fix = str(xyz_input) + '/input/' + self.chain_name + '.csv'
+            xyz_input_fix = str(img_path) + '/input/' + self.chain_name + '.csv'
+            comb_output_fix = str(img_path) + '/output/' + 'comb_' + self.chain_name + '.json'
+            points_output_fix = str(img_path) + '/output/' + 'points_' + self.chain_name + '.json'
         
         points = dict()
-        distances = dict()
-        df_csv = pd.read_csv(xyz_input_fix)
-        for x in df_csv:
-            print(x)
-        # for i in range(len(arr)):
-        #     points[i] = {'x':arr[i][0], 'y':arr[i][1]}
+        comb_distances = dict()
+        df_csv = pd.read_csv(xyz_input_fix, header=None)
+        for index, row in df_csv.iterrows():
+            points[index] = {'x':row[2], 'y':row[3], 'z':row[4]}
 
-        # comb = combinations(points.keys(),2)
-        # for x in comb:
-        #     x_1 = points[x[0]]['x']
-        #     x_2 = points[x[1]]['x']
-        #     y_1 = points[x[0]]['y']
-        #     y_2 = points[x[1]]['y']
-        #     distances[x] = math.sqrt((x_2-x_1)**2 + (y_2-y_1)**2)
+        comb = combinations(points.keys(),2)
+        for x in comb:
+            x_1 = points[x[0]]['x']
+            x_2 = points[x[1]]['x']
+            y_1 = points[x[0]]['y']
+            y_2 = points[x[1]]['y']
+            z_1 = points[x[0]]['z']
+            z_2 = points[x[1]]['z']
+            comb_distances[str(x)] = math.sqrt((x_2-x_1)**2 + (y_2-y_1)**2 + (z_2-z_1)**2)
 
-        # return points, distances
-
-        pass
+        with open(points_output_fix, 'w') as fp:
+            json.dump(points, fp)
+        with open(comb_output_fix, 'w') as fp:
+            json.dump(comb_distances, fp)
