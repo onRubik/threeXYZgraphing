@@ -22,7 +22,7 @@ https://youtu.be/6B0NAUKHD7k
 
 
 # Python
-Python version in use = 3.9.0
+Python version in use = 3.9.16
 
 To list current requirement:
 > pip freeze requirement.txt
